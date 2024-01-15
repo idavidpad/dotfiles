@@ -1,0 +1,174 @@
+"语法高亮
+syntax on
+set number relativenumber "显示行号
+set ruler "显示光标所位置都行号和列号
+set wrap  "自动折行
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set expandtab
+set smartindent
+set backspace=2
+set co=5
+set nobackup
+set noswapfile
+"为IdeaVim插件增加自动切换为英文输入法的功能，idea 需要安装IdeaVimExtension plus
+set keep-english-in-normal
+set showmatch
+set clipboard^=unnamed,unnamedplus
+set cursorline "突出显示当前行
+set fdm=marker
+"Leader
+let mapleader = ","
+let maplocalleader = "\\"
+" Toggle line numbers
+nnoremap <leader>n :setlocal number!<cr>
+ " Sort lines
+nnoremap <leader>s vip:sort<cr>
+vnoremap <leader>s :sort<cr>
+" Tabs, spaces, wrapping {{{
+set tabstop=8
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set wrap
+set textwidth=80
+set formatoptions=qrn1j
+set colorcolumn=+1
+" }}}
+" Copying/pasting text to the system clipboard.
+noremap  <leader>p "+p
+vnoremap <leader>y "+y
+nnoremap <leader>y VV"+y
+nnoremap <leader>Y "+y
+
+" Save
+nnoremap s :w<cr>
+" Yank to end of line
+nnoremap Y y$
+
+" Quick editing ----------------------------------------------------------- {{{
+
+nnoremap <leader>eb :vsplit ~/Dropbox/plan/LinuxAndMacos.md<cr>
+nnoremap <leader>ed :vsplit ~/.vim/custom-dictionary.utf-8.add<cr>
+nnoremap <leader>ef :vsplit ~/.config/fish/config.fish<cr>
+nnoremap <leader>eg :vsplit ~/.gitconfig<cr>
+nnoremap <leader>es :vsplit ~/.stumpwmrc<cr>
+nnoremap <leader>eh :vsplit ~/.hgrc<cr>
+nnoremap <leader>el :vsplit ~/.lispwords<cr>
+nnoremap <leader>em :vsplit ~/.mutt/muttrc<cr>
+nnoremap <leader>ep :vsplit ~/Dropbox/plan/notes.markdown<cr>
+nnoremap <leader>eq :vsplit ~/Dropbox/quotes.txt<cr>Gzz
+nnoremap <leader>et :vsplit ~/.tmux.conf<cr>
+nnoremap <leader>ev :vsplit ~/.vimrc<cr>
+
+" }}}
+
+" Searching and movement -------------------------------------------------- {{{
+
+" Use sane regexes.
+nnoremap / /\v
+vnoremap / /\v
+
+set ignorecase
+set smartcase
+set incsearch
+set showmatch
+set hlsearch
+set gdefault
+
+set scrolloff=5
+set sidescroll=1
+set sidescrolloff=10
+
+set virtualedit+=block
+
+noremap <silent> <leader><space> :noh<cr>:call clearmatches()<cr>
+
+runtime macros/matchit.vim
+map <tab> %
+silent! unmap [%
+silent! unmap ]%
+
+" Made D behave
+nnoremap D d$
+
+" Don't move on *
+" I'd use a function for this but Vim clobbers the last search when you're in
+" a function so fuck it, practicality beats purity.
+nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
+
+" Jumping to tags.
+"
+" Basically, <c-]> jumps to tags (like normal) and <c-\> opens the tag in a new
+" split instead.
+"
+" Both of them will align the destination line to the upper middle part of the
+" screen.  Both will pulse the cursor line so you can see where the hell you
+" are.  <c-\> will also fold everything in the buffer and then unfold just
+" enough for you to see the destination line.
+"
+function! JumpTo(jumpcommand)
+    execute a:jumpcommand
+    call FocusLine()
+    Pulse
+endfunction
+function! JumpToInSplit(jumpcommand)
+    execute "normal! \<c-w>v"
+    execute a:jumpcommand
+    Pulse
+endfunction
+
+function! JumpToTag()
+    call JumpTo("normal! \<c-]>")
+endfunction
+function! JumpToTagInSplit()
+    call JumpToInSplit("normal! \<c-]>")
+endfunction
+
+nnoremap <c-]> :silent! call JumpToTag()<cr>
+nnoremap <c-\> :silent! call JumpToTagInSplit()<cr>
+
+" Keep search matches in the middle of the window.
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Same when jumping around
+nnoremap g; g;zz
+nnoremap g, g,zz
+nnoremap <c-o> <c-o>zz
+
+" Easier to type, and I never use the default behavior.
+noremap H ^
+noremap L $
+vnoremap L g_
+
+" Heresy
+inoremap <c-a> <esc>I
+inoremap <c-e> <esc>A
+cnoremap <c-a> <home>
+cnoremap <c-e> <end>
+
+" gi already moves to "last place you exited insert mode", so we'll map gI to
+" something similar: move to last change
+nnoremap gI `.
+
+" Fix linewise visual selection of various text objects
+nnoremap VV V
+nnoremap Vit vitVkoj
+nnoremap Vat vatV
+nnoremap Vab vabV
+nnoremap VaB vaBV
+
+" Directional Keys {{{
+
+" It's 2013.
+noremap j gj
+noremap k gk
+noremap gj j
+noremap gk k
+
+noremap <leader>v <C-w>v
+
+" }}}
+
