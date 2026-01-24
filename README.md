@@ -1,6 +1,6 @@
 # dotfiles
 
-My Arch config
+config
 
 ## Specifications
 
@@ -17,7 +17,7 @@ My Arch config
 * Screen Locking: [hyprlock](https://github.com/hyprwm/hyprlock)
 * Screenshot: [grim](https://github.com/emersion/grim) [slurp](https://github.com/emersion/slurp) [satty](https://github.com/gabm/Satty)
 * Notification: [mako](https://github.com/emersion/mako)
-* Launcher:  [wofi](https://hg.sr.ht/~scoopta/wofi) 
+* Launcher:  [wofi](https://hg.sr.ht/~scoopta/wofi)
 * Wallpaper: [hyprpaper](https://github.com/hyprwm/hyprpaper) [wallpaper script (Automatically download bing 4k wallpapers and set)](./local/bin/wallpaper)
 * Browser: [firefox](https://www.firefox.com)
 
