@@ -269,22 +269,56 @@ true
 export HOMEBREW_API_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/api #brew.idayer.com
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles #brew.idayer.com
 export HOMEBREW_PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/ #brew.idayer.com
-oh-my-posh init fish --config ~/.config/oh-my-posh/themes/jandedobbeleer.omp.json | source
+# # oh-my-posh init fish --config ~/.config/oh-my-posh/themes/jandedobbeleer.omp.json | source
+# if status is-interactive
+#     oh-my-posh init fish --config ~/.config/oh-my-posh/themes/unicorn.omp.json | source
+# end
 
-# 延迟加载 Oh-My-Posh，避免键绑定冲突
-function init_oh_my_posh --on-event fish_postexec
-    if not functions -q __oh_my_posh_initialized
-        oh-my-posh init fish | source
-        function __oh_my_posh_initialized
-        end
+# ================================================
+# Fish Shell 完全固定 Oh My Posh unicorn 主题
+# ================================================
+
+# 只在交互式 shell 中生效
+if status is-interactive
+
+    # 1️⃣ 设置主题路径（使用绝对路径）
+    set -gx OMP_THEME $HOME/.config/oh-my-posh/themes/unicorn.omp.json
+
+    # 2️⃣ 清理可能影响 prompt 的旧函数
+    # 删除可能存在的自定义 prompt 函数
+    for fn in (functions | grep -E 'fish_prompt|fish_right_prompt|rerender_on_dir_change')
+        functions -e $fn
     end
+
+    # 3️⃣ 初始化 Oh My Posh
+    oh-my-posh init fish --config $OMP_THEME | source
+
+    # 4️⃣ 禁止目录切换时自动重绘覆盖主题
+    function nop --on-variable PWD
+        # 空函数，不做任何操作
+        # 防止其他插件或旧配置调用时覆盖主题
+    end
+
+    # 5️⃣ 强制隐藏 Fish 默认提示符
+    set -g fish_prompt ''
+    set -g fish_right_prompt ''
+
+    # 6️⃣ 可选：禁止其它插件自动修改 PROMPT
+    # 如果你使用 fisher 插件管理器，可在这里禁用 prompt 插件
+    # 例如：fisher remove bobthefish
 end
+
+
+# 延迟加载 Oh-My-Posh，避免键绑定冲突, 加载后会有主题的问题
+# function init_oh_my_posh --on-event fish_postexec
+#     if not functions -q __oh_my_posh_initialized
+#         oh-my-posh init fish | source
+#         function __oh_my_posh_initialized
+#         end
+#     end
+# end
 
 # 在文件末尾添加
 # mkdir -p ~/.config/fish/completions
 # carapace --list | awk '{print $1}' | xargs -I{} touch ~/.config/fish/completions/{}.fish # 选做：生成静态补全文件以提高速度
 carapace _carapace fish | source
-
-if status is-interactive
-    oh-my-posh init fish --config ~/.config/oh-my-posh/themes/unicorn.omp.json | source
-end
