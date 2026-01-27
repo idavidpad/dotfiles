@@ -26,35 +26,34 @@ vim.opt.foldlevel = 99
 vim.opt.signcolumn = "yes"
 vim.opt.winborder = "rounded"
 
-
-
 -- Copy/Paste when using ssh on a remote server
 if vim.env.SSH_CONNECTION and pcall(require, "vim.ui.clipboard.osc52") then
-  vim.g.clipboard = {
-    name = "OSC 52",
-    copy = {
-      ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-      ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
-    },
-    paste = {
-      ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
-      ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
-    },
-  }
+	vim.g.clipboard = {
+		name = "OSC 52",
+		copy = {
+			["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+			["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+		},
+		paste = {
+			["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+			["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+		},
+	}
 end
+
 
 -- Better diagnostic signs
 vim.diagnostic.config({
-  virtual_text = {
-    prefix = "●", -- Could be '●', '▎', 'x', ■
-    spacing = 4,
-  },
-  signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = "󰅚 ",
-      [vim.diagnostic.severity.WARN] = " ",
-      [vim.diagnostic.severity.INFO] = " ",
-      [vim.diagnostic.severity.HINT] = "",
-    },
-  },
+	virtual_text = {
+		prefix = "●", -- Could be '●', '▎', 'x', ■
+		spacing = 4,
+	},
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "󰅚 ",
+			[vim.diagnostic.severity.WARN] = " ",
+			[vim.diagnostic.severity.INFO] = " ",
+			[vim.diagnostic.severity.HINT] = "",
+		},
+	},
 })

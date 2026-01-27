@@ -269,3 +269,22 @@ true
 export HOMEBREW_API_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/api #brew.idayer.com
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles #brew.idayer.com
 export HOMEBREW_PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/ #brew.idayer.com
+oh-my-posh init fish --config ~/.config/oh-my-posh/themes/jandedobbeleer.omp.json | source
+
+# 延迟加载 Oh-My-Posh，避免键绑定冲突
+function init_oh_my_posh --on-event fish_postexec
+    if not functions -q __oh_my_posh_initialized
+        oh-my-posh init fish | source
+        function __oh_my_posh_initialized
+        end
+    end
+end
+
+# 在文件末尾添加
+# mkdir -p ~/.config/fish/completions
+# carapace --list | awk '{print $1}' | xargs -I{} touch ~/.config/fish/completions/{}.fish # 选做：生成静态补全文件以提高速度
+carapace _carapace fish | source
+
+if status is-interactive
+    oh-my-posh init fish --config ~/.config/oh-my-posh/themes/unicorn.omp.json | source
+end

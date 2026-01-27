@@ -1,3 +1,4 @@
+
 -- Set indent to 2 for lua
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "lua",
