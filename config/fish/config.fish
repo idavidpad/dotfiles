@@ -7,9 +7,22 @@ if status is-interactive
     alias lg lazygit
     #    starship init fish | source
 end
-
+# set -U fish_user_paths ~/.fzf/bin/fzf $fish_user_paths
+# fzf_key_bindings
 # Useful functions {{{
 
+alias n nvim
+alias g git
+function sf
+    source ~/.config/fish/config.fish
+end
+
+function we
+    nvim ~/.wezterm.lua
+end
+function et
+    nvim ~/.tmux.conf
+end
 function eb
     nvim ~/freedom/obsidian/inbox/thinking.md
 end
@@ -61,6 +74,14 @@ function ....
 end
 function .....
     cd ../../../..
+end
+
+# 输入 'ff' 搜索文件并用 bat 预览，选中后直接用 vim 打开
+function ff
+    fzf --preview "bat --color=always --style=numbers --line-range :500 {}" | read -l result
+    if test -n "$result"
+        nvim $result
+    end
 end
 
 alias p pass
@@ -322,3 +343,44 @@ end
 # mkdir -p ~/.config/fish/completions
 # carapace --list | awk '{print $1}' | xargs -I{} touch ~/.config/fish/completions/{}.fish # 选做：生成静态补全文件以提高速度
 carapace _carapace fish | source
+
+# Ctrl-R 搜索历史
+bind \cr fzf-history-widget
+# Ctrl-T 模糊搜索文件
+function fzf-file-widget
+    set selected (fzf)
+    if test -n "$selected"
+        commandline -i $selected
+    end
+end
+bind \ct fzf-file-widget
+# 基本用法（fish shell）
+# z <pattern> → 跳转到最常访问的目录
+# z -i → fzf 弹出模糊选择目录
+# z -l → 列出已记录的目录和权重
+# 配合 fzf 最佳体验
+set -gx PATH /usr/local/bin $PATH
+# 仅在交互式 shell 下加载
+# -----------------------------
+# fzf 最新 fish 初始化
+# -----------------------------
+# 永久 PATH
+set -U fish_user_paths $HOME/.fzf/bin $fish_user_paths
+# 交互式 shell 加载 fzf 快捷键和自动补全
+# status --is-interactive; and fzf --fish | source
+# zoxide 初始化
+if command -v zoxide >/dev/null
+    zoxide init fish | source
+end
+
+# 针对 tmux 场景：当进入新目录时，手动给 zoxide 增加权重
+function __zoxide_hook --on-variable PWD
+    test -z "$fish_private_mode"
+    and zoxide add -- (pwd)
+end
+# 按 Ctrl-R 调出历史命令模糊搜索
+# 按 Ctrl-T 搜索文件
+# z -i 弹出 fuzzy 搜索目录
+
+# zoxide 初始化
+status --is-interactive; and zoxide init fish | source
